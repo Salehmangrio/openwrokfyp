@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: openwork-ai-service
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_APP_URL
+        value: https://openwork.local
+      - key: OPENROUTER_APP_NAME
+        value: OpenWork AI Service
