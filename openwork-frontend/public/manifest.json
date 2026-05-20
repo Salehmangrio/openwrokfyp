@@ -1,0 +1,27 @@
+{
+  "name": "OpenWork — Decentralized Job Marketplace",
+  "short_name": "OpenWork",
+  "description": "Hire vetted freelancers or get paid securely with smart-contract escrow on OpenWork — the decentralized job marketplace built for global, trustless work.",
+  "start_url": "https://www.openworkfyp.me/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#6366f1",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity"],
+  "screenshots": [
+    {
+      "src": "https://www.openworkfyp.me/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/openwork.png",
+      "sizes": "596x596",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# Redirect apex domain to www
+https://openworkfyp.me/* https://www.openworkfyp.me/:splat 301!
+
+# SPA catch-all for client-side routing
+/*    /index.html   200

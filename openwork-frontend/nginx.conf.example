@@ -1,0 +1,117 @@
+# Nginx Configuration for OpenWork Frontend (DigitalOcean Droplet)
+# Location: /etc/nginx/sites-available/openworkfyp.me
+
+upstream backend {
+    server localhost:5000;
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name openworkfyp.me www.openworkfyp.me;
+    return 301 https://www.openworkfyp.me$request_uri;
+}
+
+# Redirect apex domain to www
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name openworkfyp.me;
+
+    ssl_certificate /etc/letsencrypt/live/openworkfyp.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/openworkfyp.me/privkey.pem;
+
+    return 301 https://www.openworkfyp.me$request_uri;
+}
+
+# Main server block for www.openworkfyp.me
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.openworkfyp.me;
+
+    # SSL Certificates (from Let's Encrypt)
+    ssl_certificate /etc/letsencrypt/live/openworkfyp.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/openworkfyp.me/privkey.pem;
+
+    # SSL Configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    # Security Headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+
+    # Performance Headers
+    add_header Cache-Control "public, max-age=3600" always;
+
+    # Gzip Compression
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript application/json application/javascript application/xml+rss application/rss+xml font/truetype font/opentype application/vnd.ms-fontobject image/svg+xml;
+
+    # Root directory for frontend build
+    root /var/www/openwork/dist;
+    index index.html index.htm;
+
+    # Static assets - cache for 30 days
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # robots.txt - serve as plain text (not cached)
+    location = /robots.txt {
+        add_header Content-Type "text/plain";
+        access_log off;
+    }
+
+    # sitemap.xml - serve as XML
+    location = /sitemap.xml {
+        add_header Content-Type "application/xml";
+        access_log off;
+    }
+
+    # manifest.json - serve as JSON
+    location = /manifest.json {
+        add_header Content-Type "application/json";
+        add_header Cache-Control "public, max-age=604800"; # 7 days
+    }
+
+    # API proxy (if needed)
+    location /api/ {
+        proxy_pass http://backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # SPA routing - catch-all for client-side routing
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header Cache-Control "public, max-age=3600"; # 1 hour for HTML
+    }
+
+    # Deny access to hidden files and directories
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+}
