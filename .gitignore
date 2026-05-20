@@ -1,0 +1,62 @@
+# BACKEND IGNORE FILES
+backend/node_modules
+backend/seeddata
+backend/.env
+backend/Dockerfile
+backend/docker-compose.yml
+backend/test-payments.js
+backend/package-lock.json
+
+
+# FRONTEND IGNORE FILES
+# Logs
+frontend/logs
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+frontend/
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+frontend/
+frontend/# Editor directories and files
+frontend/.vscode/*
+frontend/!.vscode/extensions.json
+frontend/.idea
+frontend/.DS_Store
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sln
+frontend/*.sw?
+frontend/
+frontend/.env
+
+
+#  AI SERVICE IGNORE
+openwork-ai-service/.venv/
+openwork-ai-service/venv/
+openwork-ai-service/env/
+openwork-ai-service/__pycache__/
+openwork-ai-service/*.pyc
+openwork-ai-service/*.pyo
+openwork-ai-service/.env
+openwork-ai-service/.env.*
+openwork-ai-service/!.env.example
+openwork-ai-service/.DS_Store
+openwork-ai-service/.idea/
+openwork-ai-service/.vscode/
+openwork-ai-service/dist/
+openwork-ai-service/build/
+openwork-ai-service/*.egg-info/
+openwork-ai-service/.pytest_cache/
+openwork-ai-service/.coverage
+openwork-ai-service/htmlcov/
+openwork-ai-service/*.zip
+
+
+.env
